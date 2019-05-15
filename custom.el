@@ -65,20 +65,24 @@
  '(custom-enabled-themes (quote (darktooth)))
  '(custom-safe-themes
    (quote
-    ("88049c35e4a6cedd4437ff6b093230b687d8a1fb65408ef17bfcf9b7338734f6" "274fa62b00d732d093fc3f120aca1b31a6bb484492f31081c1814a858e25c72e" default)))
+    ("a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "88049c35e4a6cedd4437ff6b093230b687d8a1fb65408ef17bfcf9b7338734f6" "274fa62b00d732d093fc3f120aca1b31a6bb484492f31081c1814a858e25c72e" default)))
+ '(dired-dwim-target t)
  '(flyspell-tex-command-regexp
    "\\(\\(begin\\|end\\)[ 	]*{\\|\\(cite[a-z*]*\\|label\\|[cC]?ref\\|eqref\\|usepackage\\|documentclass\\)[ 	]*\\(\\[[^]]*\\]\\)?{[^{}]*\\)")
  '(font-latex-math-environments
    (quote
     ("display" "displaymath" "equation" "eqnarray" "gather" "math" "multline" "align" "alignat" "xalignat" "xxalignat" "flalign" "gather")))
+ '(helm-split-window-in-side-p t)
  '(inhibit-startup-screen t)
  '(ispell-dictionary "british")
- '(ispell-program-name "D:\\Program Files\\Aspell\\bin\\aspell.exe")
+;; '(ispell-program-name "D:\\Program Files\\Aspell\\bin\\aspell.exe")
  '(line-move-visual t)
+ '(mc/insert-numbers-default 1)
+ '(org-hide-emphasis-markers t)
  '(package-selected-packages
    (quote
     (org-ref projectile smart-mode-line latex-extra focus paredit buffer-flip buffer-move phi-search yasnippet darktooth-theme dracula-theme magit web-mode helm expand-region dashboard peep-dired ace-jump-mode julia-repl julia-mode poly-R poly-markdown polymode multiple-cursors font-utils unicode-fonts list-packages-ext use-package ess adaptive-wrap auctex)))
- '(preview-gs-command "GSWIN64C.EXE")
+;; '(preview-gs-command "GSWIN64C.EXE")
  '(preview-image-type (quote pnm))
  '(preview-inner-environments
    (quote
