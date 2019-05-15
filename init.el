@@ -22,9 +22,16 @@
 
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
+;; install use-package if missing
+(unless (package-installed-p 'use-package)
+  (package-refresh-contents)
+  (package-install 'use-package))
+
 ;; This is only needed once, near the top of the file
 (eval-when-compile
   (require 'use-package))
+
+(setq use-package-always-ensure t)
 
 (use-package ace-jump-mode
   :bind ("C-c SPC" . ace-jump-mode))
@@ -57,7 +64,10 @@
 
 (use-package flyspell
   :hook ((text-mode . flyspell-mode)
-	 (prog-mode . flyspell-prog-mode)))
+	 (prog-mode . flyspell-prog-mode))
+  :config
+  (if (eq system-type 'windows-nt)
+       (setq ispell-program-name "D:\\Program Files\\Aspell\\bin\\aspell.exe")))
 
 (use-package helm
   :bind (("M-x" . helm-M-x)
@@ -68,6 +78,10 @@
   (helm-split-window-in-side-p t)
   :config
   (helm-mode 1))
+
+;; (use-package markdown-mode
+;;   :hook visual-line-mode)
+(add-hook 'markdown-mode-hook #'visual-line-mode)
 
 (use-package multiple-cursors
   :bind (("C-S-c C-S-c" . mc/edit-lines)
@@ -147,7 +161,10 @@
 	("citet" "{"))) ;; Recognise as a \ref-type commans
   :hook ((LaTeX-mode . visual-line-mode)
 	 (LaTeX-mode . linum-mode)
-	 (LaTeX-mode . LaTeX-math-mode)))
+	 (LaTeX-mode . LaTeX-math-mode))
+  :config
+  (if (eq system-type 'windows-nt)
+      (setq preview-gs-command "GSWIN64C.EXE")))
 
 (use-package web-mode
   :mode ("\\.html?\\'" "\\.css\\'"))
