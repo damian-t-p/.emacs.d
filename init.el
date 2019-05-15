@@ -87,6 +87,8 @@
   :custom
   (org-hide-emphasis-markers t))
 
+(require 'org-ref)
+
 (use-package paredit
   :hook ((emacs-lisp-mode . paredit-mode)
 	 (lisp-mode . paredit-mode)
