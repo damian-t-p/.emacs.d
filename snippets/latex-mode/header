@@ -1,0 +1,9 @@
+# -*- mode: snipper -*-
+# name: article-header
+# key: article
+# --
+\documentclass{${1:article}}
+
+\begin{document}
+$0
+\end{document}

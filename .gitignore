@@ -1,0 +1,11 @@
+/*
+
+!/.gitignore
+!/init.el
+!/custom.el
+!/.mc-lists.el
+!/snippets
+
+*~
+\#*\#
+.\#*

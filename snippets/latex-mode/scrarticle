@@ -1,0 +1,21 @@
+# -*- mode: snippet -*-
+# name: scrarticle header
+# key: mystyle
+# --
+\PassOptionsToClass{
+  title={${1:title}},
+  subtitle={${2:subtitle}},
+  letterpaper,
+  12pt
+}{hw-scrartcl}
+
+\documentclass{hw-scrartcl}
+
+\usepackage{prob-style}
+\usepackage[numbering=${3:section}]{my-theorems}
+
+\begin{document}
+\maketitle
+
+$0
+\end{document}

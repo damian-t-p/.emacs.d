@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: reside-delim
+# key: (
+# --
+\\${1:size }${2:\(}${2:$(if (string-match "[a-zA-Z0-9]$" yas-text) " " "")}$0\\${1:$(if (string-equal "left" yas-text) "right" yas-text)}${2:$(close-bracket yas-text)}

@@ -1,0 +1,5 @@
+# -*- mode: snippet -*-
+# name: iprod
+# key: iprod
+# --
+\iprod{${1:.}}{${2:.}}
