@@ -31,8 +31,6 @@
 (eval-when-compile
   (require 'use-package))
 
-(setq use-package-always-ensure t)
-
 (use-package ace-jump-mode
   :bind ("C-c SPC" . ace-jump-mode))
 
@@ -108,6 +106,12 @@
 	 (lisp-mode . paredit-mode)
 	 (list-interaction-mode . paredit-mode)))
 
+(use-package pdf-tools
+  :if (eq system-type 'gnu/linux)
+  :config (pdf-tools-install)
+  :mode (("\\.pdf\\'" . pdf-view-mode))
+  :hook ((pdf-view-mode . pdf-outline-minor-mode)))
+
 (use-package phi-search
   :bind (("C-s" . phi-search)
 	 ("C-r" . phi-search-backward)))
@@ -166,7 +170,9 @@
 	 (LaTeX-mode . LaTeX-math-mode))
   :config
   (if (eq system-type 'windows-nt)
-      (setq preview-gs-command "GSWIN64C.EXE")))
+      (setq preview-gs-command "GSWIN64C.EXE"))
+  (if (eq system-type 'gnu/linux)
+      (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)))
 
 (use-package web-mode
   :mode ("\\.html?\\'" "\\.css\\'"))
