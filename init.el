@@ -31,6 +31,10 @@
 (eval-when-compile
   (require 'use-package))
 
+;; Load everything immediately if launching from a daemon
+(if (daemonp)
+    (setq use-package-always-demand t))
+
 (use-package ace-jump-mode
   :bind ("C-c SPC" . ace-jump-mode))
 
@@ -97,7 +101,11 @@
   :mode (("\\.org$" . org-mode))
   :hook ((org-mode . visual-line-mode))
   :custom
-  (org-hide-emphasis-markers t))
+  (org-hide-emphasis-markers t)
+  :config
+  (global-set-key
+   (kbd "C-c t e")
+   (lambda () (interactive) (toggle-variable 'org-hide-emphasis-markers))))
 
 (require 'org-ref)
 
@@ -195,9 +203,24 @@
 	 (julia-mode . yas-minor-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Custom splitting functions ;;
+;; Non-package customisations ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
- 
+
+(toggle-scroll-bar -1)
+
+;;;;;;;;;;;;;;;;;;;;;;
+;; Custom functions ;;
+;;;;;;;;;;;;;;;;;;;;;;
+
+(defun toggle-variable (variable)
+  "Toggles variable between t and nil"
+  (interactive)
+  (if (eval variable)
+      (set variable nil)
+    (set variable t))
+  (message "`%s' is now `%s'" variable (eval variable)))
+
+;; Open previous buffer when splitting windows
 (defun vsplit-last-buffer ()
   (interactive)
   (split-window-vertically)

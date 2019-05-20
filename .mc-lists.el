@@ -4,6 +4,7 @@
 (setq mc/cmds-to-run-for-all
       '(
 	TeX-insert-backslash
+	diredp-previous-line
 	insert-numbers-from-one
 	keyboard-escape-quit
 	move-line-down
@@ -21,4 +22,5 @@
 	mouse-set-secondary
 	mouse-start-secondary
 	scroll-bar-toolkit-scroll
+	wdired-finish-edit
 	))
