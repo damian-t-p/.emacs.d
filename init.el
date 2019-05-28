@@ -1,4 +1,4 @@
-;; Location: C:\Users\damia\AppData\Roaming\.emacs.d
+; Location: C:\Users\damia\AppData\Roaming\.emacs.d
 (require 'package)
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
                     (not (gnutls-available-p))))
@@ -200,7 +200,8 @@
   :config
   (yas-reload-all)
   :hook ((LaTeX-mode . yas-minor-mode)
-	 (julia-mode . yas-minor-mode)))
+	 (julia-mode . yas-minor-mode)
+	 (ess-r-mode . yas-minor-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Non-package customisations ;;
