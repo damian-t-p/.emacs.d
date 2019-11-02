@@ -76,11 +76,11 @@
  '(inhibit-startup-screen t)
  '(ispell-dictionary "british")
  '(line-move-visual t)
- '(mc/insert-numbers-default 1)
+ '(mc/insert-numbers-default 1 t)
  '(org-hide-emphasis-markers t)
  '(package-selected-packages
    (quote
-    (yaml-mode csv-mode org-ref projectile smart-mode-line latex-extra focus paredit buffer-flip buffer-move phi-search yasnippet darktooth-theme dracula-theme magit web-mode helm expand-region dashboard peep-dired ace-jump-mode julia-repl julia-mode poly-R poly-markdown polymode multiple-cursors font-utils unicode-fonts list-packages-ext use-package ess adaptive-wrap auctex)))
+    (jemdoc-mode yaml-mode csv-mode org-ref projectile smart-mode-line latex-extra focus paredit buffer-flip buffer-move phi-search yasnippet darktooth-theme dracula-theme magit web-mode helm expand-region dashboard peep-dired ace-jump-mode julia-repl julia-mode poly-R poly-markdown polymode multiple-cursors font-utils unicode-fonts list-packages-ext use-package ess adaptive-wrap auctex)))
  '(preview-image-type (quote pnm))
  '(preview-inner-environments
    (quote
