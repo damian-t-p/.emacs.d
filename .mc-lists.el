@@ -5,6 +5,7 @@
       '(
 	TeX-insert-backslash
 	diredp-previous-line
+	end-of-visual-line
 	insert-numbers-from-one
 	keyboard-escape-quit
 	move-line-down
