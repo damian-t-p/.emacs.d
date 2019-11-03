@@ -81,6 +81,8 @@
   :config
   (helm-mode 1))
 
+(use-package jemdoc-mode)
+
 ;; (use-package markdown-mode
 ;;   :hook visual-line-mode)
 (add-hook 'markdown-mode-hook #'visual-line-mode)
@@ -191,6 +193,11 @@
 	'(("(" . ")")
 	  ("[" . "]")
 	  ("\\\{" . "\\\}")))
+  (defun close-size (opener)
+    (cond ((string-match "left" opener) "right")
+	  ((string-suffix-p "l" opener)
+	   (concat (substring opener nil -1) "r"))
+	  (t opener)))
   (defun close-bracket (opener)
     (cond ((assoc opener closing-brackets)
 	   (cdr (assoc opener closing-brackets)))

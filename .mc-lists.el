@@ -3,11 +3,14 @@
 
 (setq mc/cmds-to-run-for-all
       '(
+	LaTeX-babel-insert-hyphen
 	TeX-insert-backslash
+	beginning-of-visual-line
 	diredp-previous-line
 	end-of-visual-line
 	insert-numbers-from-one
 	keyboard-escape-quit
+	kill-visual-line
 	move-line-down
 	move-line-up
 	org-self-insert-command
@@ -17,6 +20,7 @@
 (setq mc/cmds-to-run-once
       '(
 	backward-sentence
+	beginning-of-buffer
 	end-of-buffer
 	helm-M-x
 	indent-for-tab-command
