@@ -154,14 +154,15 @@
 	 '("cpageref" TeX-arg-ref)
 	 '("Cpageref" TeX-arg-ref)))))
 
-  (append reftex-label-alist
-	  '('("equation" ?e "eq:" "~\\ref{%s}" t (regexp "equations?" "eqs?\\." "eqn\\."))
-	    '("theorem" ?T "thm:" "~\\ref{%s}" t ("theorem" "theorem" "thm"))
-	    '("lemma" ?T "lem:" "~\\ref{%s}" t ("lemma lemmas lm"))
-	    '("proposition" ?T "prop:" "~\\ref{%s}" t ("proposition prop"))
-	    '("definition" ?T "def:" "~\\ref{%s}" t ("definition" "def"))
-	    '("claim" ?T "clm:" "~\\ref{%s}" t ("claim"))
-	    '("corollary" ?T "cor" "~\\ref{%s}" t ("corollary" "cor"))))
+  (setq reftex-label-alist
+	(append reftex-label-alist
+		'(("equation" ?e "eq:" "~\\ref{%s}" t (regexp "equations?" "eqs?\\." "eqn\\."))
+		  ("theorem" ?T "thm:" "~\\ref{%s}" t ("theorem" "theorem" "thm"))
+		  ("lemma" ?T "lem:" "~\\ref{%s}" t ("lemma lemmas lm"))
+		  ("proposition" ?T "prop:" "~\\ref{%s}" t ("proposition prop"))
+		  ("definition" ?T "def:" "~\\ref{%s}" t ("definition" "def"))
+		  ("claim" ?T "clm:" "~\\ref{%s}" t ("claim"))
+		  ("corollary" ?T "cor" "~\\ref{%s}" t ("corollary" "cor")))))
 
   (setq reftex-default-bibliography '("D:/Users/Damian/Local tex files/bibtex/bib/mendeley/library.bib")))
 
