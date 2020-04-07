@@ -10,7 +10,9 @@
 	end-of-visual-line
 	insert-numbers-from-one
 	keyboard-escape-quit
+	kill-region
 	kill-visual-line
+	markdown-outdent-or-delete
 	move-line-down
 	move-line-up
 	org-self-insert-command
@@ -21,9 +23,11 @@
       '(
 	backward-sentence
 	beginning-of-buffer
+	dired-toggle-read-only
 	end-of-buffer
 	helm-M-x
 	indent-for-tab-command
+	markdown-forward-paragraph
 	mouse-set-secondary
 	mouse-start-secondary
 	scroll-bar-toolkit-scroll
