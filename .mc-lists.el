@@ -24,6 +24,7 @@
 	end-of-buffer
 	helm-M-x
 	indent-for-tab-command
+	kill-region
 	mouse-set-secondary
 	mouse-start-secondary
 	scroll-bar-toolkit-scroll

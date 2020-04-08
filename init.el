@@ -35,6 +35,9 @@
 (if (daemonp)
     (setq use-package-always-demand t))
 
+;; Global customisations
+(blink-cursor-mode 0)
+
 (use-package ace-jump-mode
   :bind ("C-c SPC" . ace-jump-mode))
 
