@@ -60,7 +60,7 @@
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#e090d7" "#8cc4ff" "#eeeeec"])
- '(bmkp-last-as-first-bookmark-file "c:\\Users\\damia\\AppData\\Roaming\\.emacs.d\\bookmark")
+ '(bmkp-last-as-first-bookmark-file "~/.emacs.d/bookmarks")
  '(cursor-type (quote box))
  '(custom-enabled-themes (quote (darktooth)))
  '(custom-safe-themes
@@ -76,7 +76,7 @@
  '(inhibit-startup-screen t)
  '(ispell-dictionary "british")
  '(line-move-visual t)
- '(mc/insert-numbers-default 1 t)
+ '(mc/insert-numbers-default 1)
  '(org-hide-emphasis-markers t)
  '(package-selected-packages
    (quote
