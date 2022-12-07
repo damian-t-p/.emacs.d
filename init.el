@@ -38,6 +38,13 @@
 ;; Global customisations
 (blink-cursor-mode 0)
 
+(add-to-list 'default-frame-alist '(font . "Consolas" ))
+(set-face-attribute 'default t :font "Consolas" )
+
+;; Prevent the creation of lock files. In personal use, only one user should be editing at a time
+;; and this prevents files starting with .# from appearing
+(setq create-lockfiles nil)
+
 (use-package ace-jump-mode
   :bind ("C-c SPC" . ace-jump-mode))
 
@@ -62,17 +69,30 @@
 	 ("<f12>" . buffer-stack-track)
 	 ("C-<f12>". buffer-stack-untrack)))
 
+(use-package csv-mode
+  :hook (csv-mode . csv-align-mode))
+
 (use-package dired+
   :load-path "lisp"
   :custom
   (dired-dwim-target t))
 
+(use-package ess
+  :init (require 'ess-site)
+  :hook (inferior-ess-r-mode . (lambda()
+				 (local-unset-key (kbd "C-c SPC"))))
+  :custom
+  (ess-style 'RStudio))
+
 (use-package flyspell
   :hook ((text-mode . flyspell-mode)
 	 (prog-mode . flyspell-prog-mode))
   :config
-  (if (eq system-type 'windows-nt)
-       (setq ispell-program-name "D:\\Program Files\\Aspell\\bin\\aspell.exe")))
+  (setq ispell-program-name "C:/msys64/mingw64/bin/hunspell.exe")
+  (setq ispell-local-dictionary "en_US")
+  (setq ispell-local-dictionary-alist
+	'(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)))
+  (setq ispell-hunspell-dictionary-alist ispell-local-dictionary-alist))
 
 (use-package helm
   :bind (("M-x" . helm-M-x)
@@ -114,10 +134,10 @@
 
 (require 'org-ref)
 
-(use-package paredit
-  :hook ((emacs-lisp-mode . paredit-mode)
-	 (lisp-mode . paredit-mode)
-	 (list-interaction-mode . paredit-mode)))
+;; (use-package paredit
+;;   :hook ((emacs-lisp-mode . paredit-mode)
+;; 	 (lisp-mode . paredit-mode)
+;; 	 (list-interaction-mode . paredit-mode)))
 
 (use-package pdf-tools
   :if (eq system-type 'gnu/linux)
@@ -127,7 +147,8 @@
 
 (use-package phi-search
   :bind (("C-s" . phi-search)
-	 ("C-r" . phi-search-backward)))
+	 ("C-r" . phi-search-backward)
+	 ("M-%" . phi-replace-query)))
 
 (use-package projectile
   :config
@@ -139,6 +160,10 @@
   :hook (LaTeX-mode . turn-on-reftex)
   :custom
   (reftex-plug-into-AUCTeX t)
+  (TeX-error-overview-open-after-TeX-run t)
+  (TeX-debug-warnings t)
+  (TeX-ignore-warnings "todonotes")
+  (TeX-suppress-ignored-warnings t)
   :config
   (eval-after-load
       "latex"
@@ -167,7 +192,7 @@
 		  ("claim" ?T "clm:" "~\\ref{%s}" t ("claim"))
 		  ("corollary" ?T "cor" "~\\ref{%s}" t ("corollary" "cor")))))
 
-  (setq reftex-default-bibliography '("D:/Users/Damian/Local tex files/bibtex/bib/mendeley/library.bib")))
+  (setq reftex-default-bibliography '("C:/Users/damia/Documents/Local tex files/bibtex/bib/zotero/full-lib.bib")))
 
 (use-package smart-mode-line
   :config
@@ -192,6 +217,9 @@
       (setq preview-gs-command "GSWIN64C.EXE"))
   (if (eq system-type 'gnu/linux)
       (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)))
+
+(use-package vim-empty-lines-mode
+  :hook (prog-mode text-mode))
 
 (use-package web-mode
   :mode ("\\.html?\\'" "\\.css\\'"))
@@ -225,6 +253,10 @@
 
 (toggle-scroll-bar -1)
 
+(add-hook 'visual-line-mode-hook
+	  (lambda ()
+	    (define-key map [remap kill-line] nil)))
+
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Custom functions ;;
 ;;;;;;;;;;;;;;;;;;;;;;
@@ -237,17 +269,24 @@
     (set variable t))
   (message "`%s' is now `%s'" variable (eval variable)))
 
+(defun join-next-line ()
+  "Joins next line onto current one"
+  (interactive)
+  (join-line -1))
+
+(global-set-key (kbd "C-^") 'join-next-line)
+
 ;; Open previous buffer when splitting windows
 (defun vsplit-last-buffer ()
   (interactive)
   (split-window-vertically)
-  (other-window 1 nil)
+  ;; (other-window 1 nil)
   (switch-to-next-buffer)
   )
 (defun hsplit-last-buffer ()
   (interactive)
   (split-window-horizontally)
-  (other-window 1 nil)
+  ;; (other-window 1 nil)
   (switch-to-next-buffer)
   )
  

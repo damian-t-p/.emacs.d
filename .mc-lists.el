@@ -4,10 +4,12 @@
 (setq mc/cmds-to-run-for-all
       '(
 	LaTeX-babel-insert-hyphen
+	LaTeX-insert-left-brace
 	TeX-insert-backslash
 	beginning-of-visual-line
 	diredp-previous-line
 	end-of-visual-line
+	ess-smart-comma
 	insert-numbers-from-one
 	keyboard-escape-quit
 	kill-region
@@ -22,13 +24,17 @@
 (setq mc/cmds-to-run-once
       '(
 	beginning-of-buffer
+	comment-dwim
 	dired-toggle-read-only
 	end-of-buffer
 	helm-M-x
 	indent-for-tab-command
 	markdown-forward-paragraph
+	mouse-set-region
 	mouse-set-secondary
 	mouse-start-secondary
+	org-cycle
+	phi-replace-query
 	scroll-bar-toolkit-scroll
 	wdired-finish-edit
 	))

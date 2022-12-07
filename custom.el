@@ -5,12 +5,10 @@
  ;; If there is more than one, they won't work right.
  '(LaTeX-electric-left-right-brace nil)
  '(LaTeX-section-hook
-   (quote
-    (LaTeX-section-heading LaTeX-section-title LaTeX-section-section)))
- '(LaTeX-verbatim-environments (quote ("verbatim" "verbatim*" "lstlisting")))
+   '(LaTeX-section-heading LaTeX-section-title LaTeX-section-section))
+ '(LaTeX-verbatim-environments '("verbatim" "verbatim*" "lstlisting"))
  '(TeX-command-list
-   (quote
-    (("TeX" "%(PDF)%(tex) %(file-line-error) %(extraopts) %`%S%(PDFout)%(mode)%' %t" TeX-run-TeX nil
+   '(("TeX" "%(PDF)%(tex) %(file-line-error) %(extraopts) %`%S%(PDFout)%(mode)%' %t" TeX-run-TeX nil
       (plain-texo-mode texinfo-mode ams-tex-mode)
       :help "Run plain TeX")
      ("LaTeX" "%`%l%(mode)%' %t" TeX-run-TeX nil
@@ -53,39 +51,32 @@
      ("Spell" "(TeX-ispell-document \"\")" TeX-run-function nil t :help "Spell-check the document")
      ("Clean" "TeX-clean" TeX-run-function nil t :help "Delete generated intermediate files")
      ("Clean All" "(TeX-clean t)" TeX-run-function nil t :help "Delete generated intermediate and output files")
-     ("Other" "" TeX-run-command t t :help "Run an arbitrary command"))))
- '(TeX-electric-math (quote ("\\(" . "\\)")))
+     ("Other" "" TeX-run-command t t :help "Run an arbitrary command")))
+ '(TeX-electric-math '("\\(" . "\\)"))
  '(TeX-insert-braces nil)
  '(ansi-color-faces-vector
    [default default default italic underline success warning error])
  '(ansi-color-names-vector
    ["#212526" "#ff4b4b" "#b4fa70" "#fce94f" "#729fcf" "#e090d7" "#8cc4ff" "#eeeeec"])
  '(bmkp-last-as-first-bookmark-file "~/.emacs.d/bookmarks")
- '(cursor-type (quote box))
- '(custom-enabled-themes (quote (darktooth)))
+ '(cursor-type 'box)
+ '(custom-enabled-themes '(darktooth))
  '(custom-safe-themes
-   (quote
-    ("a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "88049c35e4a6cedd4437ff6b093230b687d8a1fb65408ef17bfcf9b7338734f6" "274fa62b00d732d093fc3f120aca1b31a6bb484492f31081c1814a858e25c72e" default)))
- '(dired-dwim-target t)
+   '("d2e0c53dbc47b35815315fae5f352afd2c56fa8e69752090990563200daae434" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "88049c35e4a6cedd4437ff6b093230b687d8a1fb65408ef17bfcf9b7338734f6" "274fa62b00d732d093fc3f120aca1b31a6bb484492f31081c1814a858e25c72e" default))
  '(flyspell-tex-command-regexp
    "\\(\\(begin\\|end\\)[ 	]*{\\|\\(cite[a-z*]*\\|label\\|[cC]?ref\\|eqref\\|usepackage\\|documentclass\\)[ 	]*\\(\\[[^]]*\\]\\)?{[^{}]*\\)")
  '(font-latex-math-environments
-   (quote
-    ("display" "displaymath" "equation" "eqnarray" "gather" "math" "multline" "align" "alignat" "xalignat" "xxalignat" "flalign" "gather")))
- '(helm-split-window-in-side-p t)
+   '("display" "displaymath" "equation" "eqnarray" "gather" "math" "multline" "align" "alignat" "xalignat" "xxalignat" "flalign" "gather"))
  '(inhibit-startup-screen t)
  '(ispell-dictionary "british")
  '(line-move-visual t)
- '(mc/insert-numbers-default 1)
- '(org-hide-emphasis-markers t)
  '(package-selected-packages
-   (quote
-    (jemdoc-mode yaml-mode csv-mode org-ref projectile smart-mode-line latex-extra focus paredit buffer-flip buffer-move phi-search yasnippet darktooth-theme dracula-theme magit web-mode helm expand-region dashboard peep-dired ace-jump-mode julia-repl julia-mode poly-R poly-markdown polymode multiple-cursors font-utils unicode-fonts list-packages-ext use-package ess adaptive-wrap auctex)))
- '(preview-image-type (quote pnm))
+   '(wc-mode vi-tilde-fringe vim-empty-lines-mode jemdoc-mode yaml-mode csv-mode org-ref projectile smart-mode-line latex-extra focus paredit buffer-flip buffer-move phi-search yasnippet darktooth-theme dracula-theme magit web-mode helm expand-region dashboard peep-dired ace-jump-mode julia-repl julia-mode poly-R poly-markdown polymode multiple-cursors font-utils unicode-fonts list-packages-ext use-package ess adaptive-wrap auctex))
+ '(preview-image-type 'pnm)
  '(preview-inner-environments
-   (quote
-    ("Bmatrix" "Vmatrix" "aligned" "array" "bmatrix" "cases" "gathered" "matrix" "pmatrix" "smallmatrix" "split" "subarray" "vmatrix" "piecewise")))
- '(reftex-ref-style-default-list (quote ("Default" "Cleveref")))
+   '("Bmatrix" "Vmatrix" "aligned" "array" "bmatrix" "cases" "gathered" "matrix" "pmatrix" "smallmatrix" "split" "subarray" "vmatrix" "piecewise"))
+ '(reftex-ref-style-default-list '("Default" "Cleveref"))
+ '(standard-indent 4)
  '(tool-bar-mode nil))
 (custom-set-faces
  ;; custom-set-faces was added by Custom.
