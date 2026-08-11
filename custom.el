@@ -62,7 +62,7 @@
  '(cursor-type 'box)
  '(custom-enabled-themes '(darktooth))
  '(custom-safe-themes
-   '("d2e0c53dbc47b35815315fae5f352afd2c56fa8e69752090990563200daae434" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "88049c35e4a6cedd4437ff6b093230b687d8a1fb65408ef17bfcf9b7338734f6" "274fa62b00d732d093fc3f120aca1b31a6bb484492f31081c1814a858e25c72e" default))
+   '("d824f0976625bb3bb38d3f6dd10b017bdb4612f27102545a188deef0d88b0cd9" "d2e0c53dbc47b35815315fae5f352afd2c56fa8e69752090990563200daae434" "a27c00821ccfd5a78b01e4f35dc056706dd9ede09a8b90c6955ae6a390eb1c1e" "88049c35e4a6cedd4437ff6b093230b687d8a1fb65408ef17bfcf9b7338734f6" "274fa62b00d732d093fc3f120aca1b31a6bb484492f31081c1814a858e25c72e" default))
  '(flyspell-tex-command-regexp
    "\\(\\(begin\\|end\\)[ 	]*{\\|\\(cite[a-z*]*\\|label\\|[cC]?ref\\|eqref\\|usepackage\\|documentclass\\)[ 	]*\\(\\[[^]]*\\]\\)?{[^{}]*\\)")
  '(font-latex-math-environments
@@ -70,8 +70,11 @@
  '(inhibit-startup-screen t)
  '(ispell-dictionary "british")
  '(line-move-visual t)
+ '(org-format-latex-options
+   '(:foreground default :background default :scale 1.5 :html-foreground "Black" :html-background "Transparent" :html-scale 1.0 :matchers
+		 ("begin" "$1" "$" "$$" "\\(" "\\[")))
  '(package-selected-packages
-   '(wc-mode vi-tilde-fringe vim-empty-lines-mode jemdoc-mode yaml-mode csv-mode org-ref projectile smart-mode-line latex-extra focus paredit buffer-flip buffer-move phi-search yasnippet darktooth-theme dracula-theme magit web-mode helm expand-region dashboard peep-dired ace-jump-mode julia-repl julia-mode poly-R poly-markdown polymode multiple-cursors font-utils unicode-fonts list-packages-ext use-package ess adaptive-wrap auctex))
+   '(org-journal stan-mode rainbow-delimiters org wc-mode vi-tilde-fringe vim-empty-lines-mode jemdoc-mode yaml-mode csv-mode org-ref smart-mode-line latex-extra focus paredit buffer-flip buffer-move phi-search yasnippet darktooth-theme dracula-theme magit web-mode helm expand-region dashboard peep-dired ace-jump-mode julia-repl julia-mode poly-R poly-markdown polymode multiple-cursors font-utils unicode-fonts list-packages-ext use-package ess adaptive-wrap auctex))
  '(preview-image-type 'pnm)
  '(preview-inner-environments
    '("Bmatrix" "Vmatrix" "aligned" "array" "bmatrix" "cases" "gathered" "matrix" "pmatrix" "smallmatrix" "split" "subarray" "vmatrix" "piecewise"))

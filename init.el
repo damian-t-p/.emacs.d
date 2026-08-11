@@ -72,6 +72,9 @@
 (use-package csv-mode
   :hook (csv-mode . csv-align-mode))
 
+(use-package dnd-mode
+  :load-path "dnd-mode")
+
 (use-package dired+
   :load-path "lisp"
   :custom
@@ -127,12 +130,18 @@
   :hook ((org-mode . visual-line-mode))
   :custom
   (org-hide-emphasis-markers t)
+  ;; (org-cite-global-bibliography
+  ;;  '("C:/Users/damia/Documents/Local tex files/bibtex/bib/zotero/full-lib.bib"))
   :config
   (global-set-key
    (kbd "C-c t e")
    (lambda () (interactive) (toggle-variable 'org-hide-emphasis-markers))))
 
 (require 'org-ref)
+
+(use-package org-journal
+  :custom
+  (org-journal-dir "C:/Users/damia/Documents/Documents/Journal"))
 
 ;; (use-package paredit
 ;;   :hook ((emacs-lisp-mode . paredit-mode)
@@ -150,10 +159,10 @@
 	 ("C-r" . phi-search-backward)
 	 ("M-%" . phi-replace-query)))
 
-(use-package projectile
-  :config
-  (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-  (projectile-mode +1))
+;; (use-package projectile
+;;   :config
+;;   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
+;;   (projectile-mode +1))
 
 (use-package reftex
   :after tex
@@ -245,13 +254,24 @@
   (yas-reload-all)
   :hook ((LaTeX-mode . yas-minor-mode)
 	 (julia-mode . yas-minor-mode)
-	 (ess-r-mode . yas-minor-mode)))
+	 (ess-r-mode . yas-minor-mode)
+	 (dnd-mode . yas-minor-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Non-package customisations ;;
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 
-(toggle-scroll-bar -1)
+
+(global-set-key (kbd "C-j") 'delete-backward-char)
+
+;; Fix an issue in which scroll bars keep appearing in new frames
+;; that are created when running in emacsclient.
+;; https://emacs.stackexchange.com/a/23785/23486
+(defun my/disable-scroll-bars (frame)
+  (modify-frame-parameters frame
+                           '((vertical-scroll-bars . nil)
+                             (horizontal-scroll-bars . nil))))
+(add-hook 'after-make-frame-functions 'my/disable-scroll-bars)
 
 (add-hook 'visual-line-mode-hook
 	  (lambda ()
@@ -281,14 +301,13 @@
   (interactive)
   (split-window-vertically)
   ;; (other-window 1 nil)
-  (switch-to-next-buffer)
-  )
+  (switch-to-next-buffer))
+
 (defun hsplit-last-buffer ()
   (interactive)
   (split-window-horizontally)
   ;; (other-window 1 nil)
-  (switch-to-next-buffer)
-  )
+  (switch-to-next-buffer))
  
 (global-set-key (kbd "C-x 2") 'vsplit-last-buffer)
 (global-set-key (kbd "C-x 3") 'hsplit-last-buffer)

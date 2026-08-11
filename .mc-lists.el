@@ -5,11 +5,16 @@
       '(
 	LaTeX-babel-insert-hyphen
 	LaTeX-insert-left-brace
+	LaTeX-math-setminus
 	TeX-insert-backslash
+	TeX-insert-sub-or-superscript
 	beginning-of-visual-line
 	diredp-previous-line
 	end-of-visual-line
+	ess-indent-or-complete
+	ess-roxy-goto-end-of-roxy-comment
 	ess-smart-comma
+	ess-yank
 	insert-numbers-from-one
 	keyboard-escape-quit
 	kill-region
@@ -19,6 +24,7 @@
 	move-line-up
 	org-self-insert-command
 	sgml-slash
+	yaml-electric-backspace
 	))
 
 (setq mc/cmds-to-run-once
@@ -34,7 +40,9 @@
 	mouse-set-secondary
 	mouse-start-secondary
 	org-cycle
+	org-table-rotate-recalc-marks
 	phi-replace-query
+	polymode-eval-region-or-chunk
 	scroll-bar-toolkit-scroll
 	wdired-finish-edit
 	))
