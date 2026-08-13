@@ -131,15 +131,40 @@ machine-wide and per-user install locations."
 ;;	'(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)))
 ;;  (setq ispell-hunspell-dictionary-alist ispell-local-dictionary-alist))
 
-(use-package helm
-  :bind (("M-x" . helm-M-x)
-	 ("M-y" . helm-show-kill-ring)
-	 ("C-x b" . helm-mini)
-	 ("C-x C-f" . helm-find-files))
+(use-package vertico
+  :init
+  (vertico-mode))
+
+;; vertico-directory.el ships inside the vertico package itself, so no
+;; separate install is needed.
+(use-package vertico-directory
+  :ensure nil
+  :after vertico
+  :bind (:map vertico-map
+	      ("DEL" . vertico-directory-delete-char)
+	      ("M-DEL" . vertico-directory-delete-word)
+	      ("RET" . vertico-directory-enter))
+  :hook (rfn-eshadow-update-overlay . vertico-directory-tidy))
+
+(use-package orderless
   :custom
-  (helm-split-window-in-side-p t)
-  :config
-  (helm-mode 1))
+  (completion-styles '(orderless basic))
+  (completion-category-overrides '((file (styles basic partial-completion)))))
+
+(use-package marginalia
+  :init
+  (marginalia-mode))
+
+(use-package consult
+  :bind (("C-x b" . consult-buffer)
+	 ("M-y" . consult-yank-pop)))
+
+(use-package consult-dir
+  :after (consult vertico)
+  :bind (("C-x C-d" . consult-dir)
+	 :map vertico-map
+	 ("C-x C-d" . consult-dir)
+	 ("C-x C-j" . consult-dir-jump-file)))
 
 (use-package jemdoc-mode)
 
