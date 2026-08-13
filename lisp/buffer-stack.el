@@ -121,6 +121,8 @@
 
 ;;; Code:
 
+(require 'cl-lib)
+
 (provide 'buffer-stack)
 
 ;;; public variables / configuration
@@ -306,9 +308,9 @@ This is THE switching command; all other motions are based on this."
             (beep))
       ;; find the new index
       (if (> direction 0)
-          (incf buffer-stack-index)
+          (cl-incf buffer-stack-index)
         (if (< direction 0)
-            (decf buffer-stack-index)))
+            (cl-decf buffer-stack-index)))
       (if (< buffer-stack-index 0)
           ;; go backwards to the last buffer
           (progn (setq buffer-stack-index max-index)
@@ -320,7 +322,7 @@ This is THE switching command; all other motions are based on this."
             ;; wrap to the first buffer
             (progn (setq buffer-stack-index 0)
                    (buffer-stack-bury-buffer (current-buffer))
-                   (setq buffer (first buffer-stack))
+                   (setq buffer (car buffer-stack))
                    (or buffer-stack-quiet
                        (beep)))
           ;; the usual case, we put the top buffer before the indexed

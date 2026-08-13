@@ -1,4 +1,4 @@
-; Location: C:\Users\damia\AppData\Roaming\.emacs.d
+;;; init.el --- Personal Emacs configuration -*- lexical-binding: t; -*-
 (require 'package)
 (let* ((no-ssl (and (memq system-type '(windows-nt ms-dos))
                     (not (gnutls-available-p))))
@@ -6,9 +6,7 @@
   ;; Comment/uncomment these two lines to enable/disable MELPA and MELPA Stable as desired
   (add-to-list 'package-archives (cons "melpa" (concat proto "://melpa.org/packages/")) t)
   ;;(add-to-list 'package-archives (cons "melpa-stable" (concat proto "://stable.melpa.org/packages/")) t)
-  (when (< emacs-major-version 24)
-    ;; For important compatibility libraries like cl-lib
-    (add-to-list 'package-archives '("gnu" . (concat proto "://elpa.gnu.org/packages/")))))
+  )
 
 ;; Added by Package.el.  This must come before configurations of
 ;; installed packages.  Don't delete this line.  If you don't want it,
@@ -31,6 +29,9 @@
 (eval-when-compile
   (require 'use-package))
 
+(setq use-package-always-ensure t)
+(setq use-package-always-defer t)
+
 ;; Load everything immediately if launching from a daemon
 (if (daemonp)
     (setq use-package-always-demand t))
@@ -45,14 +46,34 @@
 ;; and this prevents files starting with .# from appearing
 (setq create-lockfiles nil)
 
-(use-package ace-jump-mode
-  :bind ("C-c SPC" . ace-jump-mode))
+(defun my/latest-glob-match (pattern)
+  "Return the version-latest file matching wildcard PATTERN, or nil.
+Comparison is version-aware, so e.g. \"R-4.10\" sorts after \"R-4.4\",
+which lets this survive R/RStudio version upgrades without editing
+this file."
+  (car (last (sort (file-expand-wildcards pattern) #'string-version-lessp))))
+
+(defun my/r-bin-directory ()
+  "Locate the bin/ directory of the most recently installed R version."
+  (my/latest-glob-match "C:/Program Files/R/R-*/bin"))
+
+(defun my/quarto-bin-directory ()
+  "Locate RStudio's bundled quarto tools directory, checking both the
+machine-wide and per-user install locations."
+  (seq-find #'file-directory-p
+	    (list "C:/Program Files/RStudio/resources/app/bin/quarto/bin/tools/"
+		  (expand-file-name
+		   "AppData/Local/Programs/RStudio/resources/app/bin/quarto/bin/tools/"
+		   "~"))))
+
+(use-package avy
+  :bind ("C-c SPC" . avy-goto-char-timer))
 
 (use-package adaptive-wrap
   :hook (visual-line-mode . adaptive-wrap-prefix-mode))
 
-(use-package bookmark+
-  :load-path "lisp/bookmark+-master/")
+;;(use-package bookmark+
+;;  :load-path "lisp/bookmark+-master/")
 
 (use-package buffer-move
   :bind (("<C-S-up>" . buf-move-up)
@@ -72,30 +93,50 @@
 (use-package csv-mode
   :hook (csv-mode . csv-align-mode))
 
-(use-package dnd-mode
-  :load-path "dnd-mode")
+;;(use-package dired+
+;;  :load-path "lisp"
+;;  :custom
+;;  (dired-dwim-target t))
 
-(use-package dired+
-  :load-path "lisp"
-  :custom
-  (dired-dwim-target t))
-
+;; NB: :custom values are evaluated later/dynamically by use-package's
+;; custom-theme mechanism (see `use-package-use-theme'), so they can't
+;; close over a `let' from :init -- each :custom form below re-derives
+;; r-bin on its own instead of sharing a binding.
 (use-package ess
-  :init (require 'ess-site)
+  :init
+  (require 'ess-site)
+  (let ((r-bin (my/r-bin-directory)))
+    (when r-bin
+      (add-to-list 'exec-path r-bin)
+      (setenv "PATH" (concat (getenv "PATH") path-separator r-bin))))
+  (let ((quarto-bin (my/quarto-bin-directory)))
+    (when quarto-bin
+      (setenv "PATH" (concat (getenv "PATH") path-separator quarto-bin))))
   :hook (inferior-ess-r-mode . (lambda()
 				 (local-unset-key (kbd "C-c SPC"))))
   :custom
+  (inferior-R-program-name (let ((r-bin (my/r-bin-directory)))
+			      (and r-bin (expand-file-name "R.exe" r-bin))))
+  (ess-rscript-program (let ((r-bin (my/r-bin-directory)))
+			  (and r-bin (expand-file-name "Rscript.exe" r-bin))))
   (ess-style 'RStudio))
 
-(use-package flyspell
-  :hook ((text-mode . flyspell-mode)
-	 (prog-mode . flyspell-prog-mode))
-  :config
-  (setq ispell-program-name "C:/msys64/mingw64/bin/hunspell.exe")
-  (setq ispell-local-dictionary "en_US")
-  (setq ispell-local-dictionary-alist
-	'(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)))
-  (setq ispell-hunspell-dictionary-alist ispell-local-dictionary-alist))
+(use-package polymode)
+
+(use-package poly-markdown)
+
+(use-package poly-R
+  :mode ("\\.Rmd\\'" . poly-markdown+r-mode))
+
+;;(use-package flyspell
+;;  :hook ((text-mode . flyspell-mode)
+;;	 (prog-mode . flyspell-prog-mode))
+;;  :config
+;;  (setq ispell-program-name "C:/msys64/mingw64/bin/hunspell.exe")
+;;  (setq ispell-local-dictionary "en_US")
+;;  (setq ispell-local-dictionary-alist
+;;	'(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)))
+;;  (setq ispell-hunspell-dictionary-alist ispell-local-dictionary-alist))
 
 (use-package helm
   :bind (("M-x" . helm-M-x)
@@ -109,9 +150,8 @@
 
 (use-package jemdoc-mode)
 
-;; (use-package markdown-mode
-;;   :hook visual-line-mode)
-(add-hook 'markdown-mode-hook #'visual-line-mode)
+ (use-package markdown-mode
+   :hook visual-line-mode)
 
 (use-package multiple-cursors
   :bind (("C-S-c C-S-c" . mc/edit-lines)
@@ -137,16 +177,11 @@
    (kbd "C-c t e")
    (lambda () (interactive) (toggle-variable 'org-hide-emphasis-markers))))
 
-(require 'org-ref)
+;; (require 'org-ref)
 
-(use-package org-journal
-  :custom
-  (org-journal-dir "C:/Users/damia/Documents/Documents/Journal"))
-
-;; (use-package paredit
-;;   :hook ((emacs-lisp-mode . paredit-mode)
-;; 	 (lisp-mode . paredit-mode)
-;; 	 (list-interaction-mode . paredit-mode)))
+;; org-journal-dir is machine-specific; set in local.el (see bottom of
+;; this file).
+(use-package org-journal)
 
 (use-package pdf-tools
   :if (eq system-type 'gnu/linux)
@@ -169,14 +204,9 @@
   :hook (LaTeX-mode . turn-on-reftex)
   :custom
   (reftex-plug-into-AUCTeX t)
-  (TeX-error-overview-open-after-TeX-run t)
-  (TeX-debug-warnings t)
-  (TeX-ignore-warnings "todonotes")
-  (TeX-suppress-ignored-warnings t)
   :config
-  (eval-after-load
-      "latex"
-    '(TeX-add-style-hook
+  (with-eval-after-load "latex"
+    (TeX-add-style-hook
       "cleveref"
       (lambda ()
 	(if (boundp 'reftex-ref-style-alist)
@@ -201,7 +231,8 @@
 		  ("claim" ?T "clm:" "~\\ref{%s}" t ("claim"))
 		  ("corollary" ?T "cor" "~\\ref{%s}" t ("corollary" "cor")))))
 
-  (setq reftex-default-bibliography '("C:/Users/damia/Documents/Local tex files/bibtex/bib/zotero/full-lib.bib")))
+  ) ; reftex-default-bibliography is machine-specific; set in local.el
+    ; (see bottom of this file).
 
 (use-package smart-mode-line
   :config
@@ -214,18 +245,22 @@
   :custom
   (TeX-parse-self t) ; Enable parse on load.
   (TeX-auto-save t) ; Enable parse on save.
+  (TeX-error-overview-open-after-TeX-run t)
+  (TeX-debug-warnings t)
+  (TeX-ignore-warnings "todonotes")
+  (TeX-suppress-ignored-warnings t)
   (font-latex-match-reference-keywords
       '(("cref" "{")
 	("Cref" "{")
 	("citet" "{"))) ;; Recognise as a \ref-type commans
   :hook ((LaTeX-mode . visual-line-mode)
-	 (LaTeX-mode . linum-mode)
+	 (LaTeX-mode . display-line-numbers-mode)
 	 (LaTeX-mode . LaTeX-math-mode))
   :config
-  (if (eq system-type 'windows-nt)
-      (setq preview-gs-command "GSWIN64C.EXE"))
-  (if (eq system-type 'gnu/linux)
-      (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)))
+  (when (eq system-type 'windows-nt)
+    (setq preview-gs-command "GSWIN64C.EXE"))
+  (when (eq system-type 'gnu/linux)
+    (add-hook 'TeX-after-compilation-finished-functions #'TeX-revert-document-buffer)))
 
 (use-package vim-empty-lines-mode
   :hook (prog-mode text-mode))
@@ -254,8 +289,7 @@
   (yas-reload-all)
   :hook ((LaTeX-mode . yas-minor-mode)
 	 (julia-mode . yas-minor-mode)
-	 (ess-r-mode . yas-minor-mode)
-	 (dnd-mode . yas-minor-mode)))
+	 (ess-r-mode . yas-minor-mode)))
 
 ;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
 ;; Non-package customisations ;;
@@ -267,15 +301,16 @@
 ;; Fix an issue in which scroll bars keep appearing in new frames
 ;; that are created when running in emacsclient.
 ;; https://emacs.stackexchange.com/a/23785/23486
+(scroll-bar-mode -1)
 (defun my/disable-scroll-bars (frame)
   (modify-frame-parameters frame
                            '((vertical-scroll-bars . nil)
                              (horizontal-scroll-bars . nil))))
 (add-hook 'after-make-frame-functions 'my/disable-scroll-bars)
 
-(add-hook 'visual-line-mode-hook
-	  (lambda ()
-	    (define-key map [remap kill-line] nil)))
+;; Restore normal kill-line behaviour instead of visual-line-mode's
+;; kill-visual-line remap.
+(define-key visual-line-mode-map [remap kill-line] nil)
 
 ;;;;;;;;;;;;;;;;;;;;;;
 ;; Custom functions ;;
@@ -330,3 +365,14 @@
 
 (global-set-key (kbd "M-N") 'move-line-down)
 (global-set-key (kbd "M-P") 'move-line-up)
+
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+;; Machine-local customisations ;;
+;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
+
+;; local.el is untracked (see .gitignore) and holds settings specific
+;; to this machine, e.g. org-journal-dir and reftex-default-bibliography.
+;; See local.el.example for a template.
+(let ((local-file (expand-file-name "local.el" user-emacs-directory)))
+  (when (file-exists-p local-file)
+    (load local-file)))

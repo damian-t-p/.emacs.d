@@ -1,0 +1,10 @@
+;;; local.el.example --- Template for local.el -*- lexical-binding: t; -*-
+
+;; Copy this file to local.el (which is gitignored) and fill in the
+;; real values for this machine. init.el loads local.el automatically
+;; if it exists.
+
+;; (setq org-journal-dir "/path/to/your/journal")
+
+;; (setq reftex-default-bibliography
+;;       '("/path/to/your/bibliography.bib"))

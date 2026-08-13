@@ -6,6 +6,7 @@
 !/.mc-lists.el
 !/snippets
 !/lisp
+!/local.el.example
 
 *~
 \#*\#
