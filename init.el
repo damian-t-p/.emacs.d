@@ -93,11 +93,6 @@ machine-wide and per-user install locations."
 (use-package csv-mode
   :hook (csv-mode . csv-align-mode))
 
-;;(use-package dired+
-;;  :load-path "lisp"
-;;  :custom
-;;  (dired-dwim-target t))
-
 ;; NB: :custom values are evaluated later/dynamically by use-package's
 ;; custom-theme mechanism (see `use-package-use-theme'), so they can't
 ;; close over a `let' from :init -- each :custom form below re-derives
@@ -117,8 +112,6 @@ machine-wide and per-user install locations."
   :custom
   (inferior-R-program-name (let ((r-bin (my/r-bin-directory)))
 			      (and r-bin (expand-file-name "R.exe" r-bin))))
-  (ess-rscript-program (let ((r-bin (my/r-bin-directory)))
-			  (and r-bin (expand-file-name "Rscript.exe" r-bin))))
   (ess-style 'RStudio))
 
 (use-package polymode)
