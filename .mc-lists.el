@@ -13,6 +13,7 @@
 	end-of-visual-line
 	ess-indent-or-complete
 	ess-roxy-goto-end-of-roxy-comment
+	ess-roxy-move-beginning-of-line
 	ess-smart-comma
 	ess-yank
 	insert-numbers-from-one

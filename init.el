@@ -18,6 +18,11 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
+;; Magit supersedes vc-mode for Git; leaving vc's own Git backend enabled
+;; makes Emacs shell out to git redundantly on every buffer visit/save,
+;; on top of whatever Magit itself runs.
+(setq vc-handled-backends (delq 'Git vc-handled-backends))
+
 (add-to-list 'default-frame-alist '(fullscreen . maximized))
 
 ;; install use-package if missing
@@ -66,6 +71,23 @@ machine-wide and per-user install locations."
 		   "AppData/Local/Programs/RStudio/resources/app/bin/quarto/bin/tools/"
 		   "~"))))
 
+;; ESS's SAS-mode recognises `* ...;'/`%* ...;' statement comments only
+;; via a font-lock regexp -- it never gives them real syntax-table
+;; comment status. So a quote character inside one (e.g. "Halyna's")
+;; gets parsed by the syntax table as opening a real (unterminated)
+;; string, which breaks fontification for everything after it. This
+;; propertizer fixes that by marking the comment's `*' and closing `;'
+;; with real comment-start/comment-end syntax.
+(defvar my/sas-comment-syntax-propertize
+  (syntax-propertize-rules
+   ("\\(^[0-9]*\\|[:;!]\\)[ \t]*\\(%?\\*\\)[^;/][^z-a]*?\\(;\\)"
+    (2 (string-to-syntax "<"))
+    (3 (string-to-syntax ">")))))
+
+(defun my/sas-fix-comment-syntax ()
+  (setq-local syntax-propertize-function my/sas-comment-syntax-propertize)
+  (syntax-ppss-flush-cache (point-min)))
+
 (use-package avy
   :bind ("C-c SPC" . avy-goto-char-timer))
 
@@ -107,8 +129,9 @@ machine-wide and per-user install locations."
   (let ((quarto-bin (my/quarto-bin-directory)))
     (when quarto-bin
       (setenv "PATH" (concat (getenv "PATH") path-separator quarto-bin))))
-  :hook (inferior-ess-r-mode . (lambda()
-				 (local-unset-key (kbd "C-c SPC"))))
+  :hook ((inferior-ess-r-mode . (lambda()
+				   (local-unset-key (kbd "C-c SPC"))))
+	 (SAS-mode . my/sas-fix-comment-syntax))
   :custom
   (inferior-R-program-name (let ((r-bin (my/r-bin-directory)))
 			      (and r-bin (expand-file-name "R.exe" r-bin))))

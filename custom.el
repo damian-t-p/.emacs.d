@@ -96,11 +96,12 @@
 		 "Black" :html-background "Transparent" :html-scale
 		 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
  '(package-selected-packages
-   '(adaptive-wrap auctex avy buffer-move consult consult-dir
-		   csv-mode darktooth-theme jemdoc-mode magit
-		   marginalia multiple-cursors orderless org-journal
-		   pdf-tools phi-search poly-R smart-mode-line vertico
-		   vim-empty-lines-mode web-mode yasnippet))
+   '(adaptive-wrap auctex avy buffer-move consult consult-dir csv-mode
+		   darktooth-theme jemdoc-mode magit marginalia
+		   multiple-cursors orderless org-journal pdf-tools
+		   phi-search poly-R poly-markdown polymode
+		   smart-mode-line vertico vim-empty-lines-mode
+		   web-mode yasnippet))
  '(preview-image-type 'pnm)
  '(preview-inner-environments
    '("Bmatrix" "Vmatrix" "aligned" "array" "bmatrix" "cases" "gathered"
