@@ -8,3 +8,13 @@
 
 ;; (setq reftex-default-bibliography
 ;;       '("/path/to/your/bibliography.bib"))
+
+;; Directory containing R.exe and Rscript.exe, for ESS.
+;; (setq my/r-bin-dir "C:/Program Files/R/R-4.4.1/bin")
+
+;; Directory containing RStudio's bundled quarto tools, for ESS.
+;; (setq my/quarto-bin-dir "C:/Program Files/RStudio/resources/app/bin/quarto/bin/tools/")
+
+;; Directory of a portable, no-installer hunspell build (must contain
+;; bin/hunspell.exe and share/hunspell/*.aff + *.dic), for flyspell.
+;; (setq my/hunspell-dir "/path/to/portable-software/hunspell-1.3.2-3-w32-bin")

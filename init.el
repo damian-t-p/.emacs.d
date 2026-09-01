@@ -18,6 +18,22 @@
 (setq custom-file "~/.emacs.d/custom.el")
 (load custom-file)
 
+;; Machine-specific paths, set in local.el (see local.el.example for a
+;; template). Declared here as nil so init.el doesn't ;; reference free
+;; variables when local.el is absent.
+(defvar my/r-bin-dir nil
+  "Directory containing R.exe and Rscript.exe.")
+(defvar my/quarto-bin-dir nil
+  "Directory containing RStudio's bundled quarto tools.")
+(defvar my/hunspell-dir nil
+  "Directory containing the portable hunspell install.")
+
+;; local.el is untracked (see .gitignore) and holds settings specific
+;; to this machine. See local.el.example for a template.
+(let ((local-file (expand-file-name "local.el" user-emacs-directory)))
+  (when (file-exists-p local-file)
+    (load local-file)))
+
 ;; Magit supersedes vc-mode for Git; leaving vc's own Git backend enabled
 ;; makes Emacs shell out to git redundantly on every buffer visit/save,
 ;; on top of whatever Magit itself runs.
@@ -47,37 +63,7 @@
 (add-to-list 'default-frame-alist '(font . "Consolas" ))
 (set-face-attribute 'default t :font "Consolas" )
 
-;; Prevent the creation of lock files. In personal use, only one user should be editing at a time
-;; and this prevents files starting with .# from appearing
-(setq create-lockfiles nil)
-
-(defun my/latest-glob-match (pattern)
-  "Return the version-latest file matching wildcard PATTERN, or nil.
-Comparison is version-aware, so e.g. \"R-4.10\" sorts after \"R-4.4\",
-which lets this survive R/RStudio version upgrades without editing
-this file."
-  (car (last (sort (file-expand-wildcards pattern) #'string-version-lessp))))
-
-(defun my/r-bin-directory ()
-  "Locate the bin/ directory of the most recently installed R version."
-  (my/latest-glob-match "C:/Program Files/R/R-*/bin"))
-
-(defun my/quarto-bin-directory ()
-  "Locate RStudio's bundled quarto tools directory, checking both the
-machine-wide and per-user install locations."
-  (seq-find #'file-directory-p
-	    (list "C:/Program Files/RStudio/resources/app/bin/quarto/bin/tools/"
-		  (expand-file-name
-		   "AppData/Local/Programs/RStudio/resources/app/bin/quarto/bin/tools/"
-		   "~"))))
-
-;; ESS's SAS-mode recognises `* ...;'/`%* ...;' statement comments only
-;; via a font-lock regexp -- it never gives them real syntax-table
-;; comment status. So a quote character inside one (e.g. "Halyna's")
-;; gets parsed by the syntax table as opening a real (unterminated)
-;; string, which breaks fontification for everything after it. This
-;; propertizer fixes that by marking the comment's `*' and closing `;'
-;; with real comment-start/comment-end syntax.
+;; Fix sas-mode to properly parse inline comments containing '
 (defvar my/sas-comment-syntax-propertize
   (syntax-propertize-rules
    ("\\(^[0-9]*\\|[:;!]\\)[ \t]*\\(%?\\*\\)[^;/][^z-a]*?\\(;\\)"
@@ -93,9 +79,6 @@ machine-wide and per-user install locations."
 
 (use-package adaptive-wrap
   :hook (visual-line-mode . adaptive-wrap-prefix-mode))
-
-;;(use-package bookmark+
-;;  :load-path "lisp/bookmark+-master/")
 
 (use-package buffer-move
   :bind (("<C-S-up>" . buf-move-up)
@@ -115,26 +98,19 @@ machine-wide and per-user install locations."
 (use-package csv-mode
   :hook (csv-mode . csv-align-mode))
 
-;; NB: :custom values are evaluated later/dynamically by use-package's
-;; custom-theme mechanism (see `use-package-use-theme'), so they can't
-;; close over a `let' from :init -- each :custom form below re-derives
-;; r-bin on its own instead of sharing a binding.
 (use-package ess
   :init
   (require 'ess-site)
-  (let ((r-bin (my/r-bin-directory)))
-    (when r-bin
-      (add-to-list 'exec-path r-bin)
-      (setenv "PATH" (concat (getenv "PATH") path-separator r-bin))))
-  (let ((quarto-bin (my/quarto-bin-directory)))
-    (when quarto-bin
-      (setenv "PATH" (concat (getenv "PATH") path-separator quarto-bin))))
+  (when my/r-bin-dir
+    (add-to-list 'exec-path my/r-bin-dir)
+    (setenv "PATH" (concat (getenv "PATH") path-separator my/r-bin-dir)))
+  (when my/quarto-bin-dir
+    (setenv "PATH" (concat (getenv "PATH") path-separator my/quarto-bin-dir)))
   :hook ((inferior-ess-r-mode . (lambda()
 				   (local-unset-key (kbd "C-c SPC"))))
 	 (SAS-mode . my/sas-fix-comment-syntax))
   :custom
-  (inferior-R-program-name (let ((r-bin (my/r-bin-directory)))
-			      (and r-bin (expand-file-name "R.exe" r-bin))))
+  (inferior-R-program-name (and my/r-bin-dir (expand-file-name "R.exe" my/r-bin-dir)))
   (ess-style 'RStudio))
 
 (use-package polymode)
@@ -144,15 +120,23 @@ machine-wide and per-user install locations."
 (use-package poly-R
   :mode ("\\.Rmd\\'" . poly-markdown+r-mode))
 
-;;(use-package flyspell
-;;  :hook ((text-mode . flyspell-mode)
-;;	 (prog-mode . flyspell-prog-mode))
-;;  :config
-;;  (setq ispell-program-name "C:/msys64/mingw64/bin/hunspell.exe")
-;;  (setq ispell-local-dictionary "en_US")
-;;  (setq ispell-local-dictionary-alist
-;;	'(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil utf-8)))
-;;  (setq ispell-hunspell-dictionary-alist ispell-local-dictionary-alist))
+(use-package flyspell
+  :ensure nil ;; built into Emacs; not an installable ELPA/MELPA package
+  :hook ((text-mode . flyspell-mode)
+	 (prog-mode . flyspell-prog-mode))
+  :config
+  (when my/hunspell-dir
+    (setq ispell-program-name (expand-file-name "bin/hunspell.exe" my/hunspell-dir))
+    (setenv "DICPATH" (expand-file-name "share/hunspell" my/hunspell-dir)))
+  (setq ispell-really-hunspell t)
+  (setq ispell-local-dictionary "en_US")
+  ;; Both dictionaries declare `SET ISO8859-1' in their .aff files, so
+  ;; that -- not utf-8 -- is the encoding ispell.el must use when
+  ;; talking to this hunspell build.
+  (setq ispell-local-dictionary-alist
+	'(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil iso-8859-1)
+	  ("en_GB" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_GB") nil iso-8859-1)))
+  (setq ispell-hunspell-dictionary-alist ispell-local-dictionary-alist))
 
 (use-package vertico
   :init
@@ -211,8 +195,6 @@ machine-wide and per-user install locations."
   :hook ((org-mode . visual-line-mode))
   :custom
   (org-hide-emphasis-markers t)
-  ;; (org-cite-global-bibliography
-  ;;  '("C:/Users/damia/Documents/Local tex files/bibtex/bib/zotero/full-lib.bib"))
   :config
   (global-set-key
    (kbd "C-c t e")
@@ -220,8 +202,8 @@ machine-wide and per-user install locations."
 
 ;; (require 'org-ref)
 
-;; org-journal-dir is machine-specific; set in local.el (see bottom of
-;; this file).
+;; org-journal-dir is machine-specific; set in local.el (see near the
+;; top of this file).
 (use-package org-journal)
 
 (use-package pdf-tools
@@ -234,11 +216,6 @@ machine-wide and per-user install locations."
   :bind (("C-s" . phi-search)
 	 ("C-r" . phi-search-backward)
 	 ("M-%" . phi-replace-query)))
-
-;; (use-package projectile
-;;   :config
-;;   (define-key projectile-mode-map (kbd "C-c p") 'projectile-command-map)
-;;   (projectile-mode +1))
 
 (use-package reftex
   :after tex
@@ -272,8 +249,7 @@ machine-wide and per-user install locations."
 		  ("claim" ?T "clm:" "~\\ref{%s}" t ("claim"))
 		  ("corollary" ?T "cor" "~\\ref{%s}" t ("corollary" "cor")))))
 
-  ) ; reftex-default-bibliography is machine-specific; set in local.el
-    ; (see bottom of this file).
+  )
 
 (use-package smart-mode-line
   :config
@@ -406,14 +382,3 @@ machine-wide and per-user install locations."
 
 (global-set-key (kbd "M-N") 'move-line-down)
 (global-set-key (kbd "M-P") 'move-line-up)
-
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-;; Machine-local customisations ;;
-;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;;
-
-;; local.el is untracked (see .gitignore) and holds settings specific
-;; to this machine, e.g. org-journal-dir and reftex-default-bibliography.
-;; See local.el.example for a template.
-(let ((local-file (expand-file-name "local.el" user-emacs-directory)))
-  (when (file-exists-p local-file)
-    (load local-file)))

@@ -85,11 +85,8 @@
    '("display" "displaymath" "equation" "eqnarray" "gather" "math"
      "multline" "align" "alignat" "xalignat" "xxalignat" "flalign"
      "gather"))
- '(inferior-ess-r-program
-   (let ((r-bin (my/r-bin-directory)))
-     (and r-bin (expand-file-name "R.exe" r-bin))) nil nil "Customized with use-package ess")
  '(inhibit-startup-screen t)
- '(ispell-dictionary "british")
+ '(ispell-dictionary "en_US")
  '(line-move-visual t)
  '(org-format-latex-options
    '(:foreground default :background default :scale 1.5 :html-foreground
