@@ -74,6 +74,30 @@
   (setq-local syntax-propertize-function my/sas-comment-syntax-propertize)
   (syntax-ppss-flush-cache (point-min)))
 
+(defun my/inside-fenced-code-block-p (pos)
+  "Non-nil if POS is inside a markdown fenced code block, per a
+plain count of ``` fence lines from the start of the buffer."
+  (save-excursion
+    (goto-char (point-min))
+    (let ((inside nil))
+      (while (re-search-forward "^[ \t]*```" pos t)
+        (setq inside (not inside)))
+      inside)))
+
+(defun my/poly-r-inline-code-head-matcher (count)
+  "Like poly-R's default `r`-inline-code head-matcher (`` `r expr` ``
+in markdown prose), but skips matches found inside a fenced code
+block. Without this, `` `r `` occurring in an R chunk's own string
+literals and exiting that phantom span resets the parser to the
+markdown host mode instead of back to the enclosing R chunk"
+  (let (result)
+    (while (and (not result)
+                (re-search-forward "\\(?:^\\|[^`]\\)\\(`r[ #]\\)" nil t count))
+      (let ((beg (match-beginning 1)) (end (match-end 1)))
+        (unless (my/inside-fenced-code-block-p beg)
+          (setq result (cons beg end)))))
+    result))
+
 (use-package avy
   :bind ("C-c SPC" . avy-goto-char-timer))
 
@@ -118,7 +142,17 @@
 (use-package poly-markdown)
 
 (use-package poly-R
-  :mode ("\\.Rmd\\'" . poly-markdown+r-mode))
+  :mode ("\\.Rmd\\'" . poly-markdown+r-mode)
+  :config
+  ;; Swap in the context-aware head-matcher (see
+  ;; my/poly-r-inline-code-head-matcher above) so `r expr` inline
+  ;; spans keep working in markdown prose but can no longer corrupt
+  ;; fontification when that literal text occurs inside an R chunk.
+  (define-innermode poly-r-markdown-inline-code-innermode poly-markdown-inline-code-innermode
+    :mode 'ess-r-mode
+    :head-matcher #'my/poly-r-inline-code-head-matcher)
+  (define-polymode poly-markdown+r-mode poly-markdown-mode :lighter " PM-Rmd"
+    :innermodes '(:inherit poly-r-markdown-inline-code-innermode)))
 
 (use-package flyspell
   :ensure nil ;; built into Emacs; not an installable ELPA/MELPA package
