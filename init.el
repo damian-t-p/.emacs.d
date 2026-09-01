@@ -170,7 +170,14 @@ markdown host mode instead of back to the enclosing R chunk"
   (setq ispell-local-dictionary-alist
 	'(("en_US" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_US") nil iso-8859-1)
 	  ("en_GB" "[[:alpha:]]" "[^[:alpha:]]" "[']" nil ("-d" "en_GB") nil iso-8859-1)))
-  (setq ispell-hunspell-dictionary-alist ispell-local-dictionary-alist))
+  (setq ispell-hunspell-dictionary-alist ispell-local-dictionary-alist)
+  ;; Polymode's ispell patch is bugged. Replace it with a version that
+  ;; checks the buffer-shared `:pm-mode' text property instead
+  (defun my/flyspell-skip-in-nested-chunks (beg end _poss)
+    (let ((mode (or (get-text-property beg :pm-mode)
+                    (get-text-property end :pm-mode))))
+      (and mode (not (eq mode 'markdown-mode)))))
+  (add-hook 'flyspell-incorrect-hook #'my/flyspell-skip-in-nested-chunks))
 
 (use-package vertico
   :init
