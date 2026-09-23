@@ -85,6 +85,7 @@
    '("display" "displaymath" "equation" "eqnarray" "gather" "math"
      "multline" "align" "alignat" "xalignat" "xxalignat" "flalign"
      "gather"))
+ '(inferior-ess-r-program (and my/r-bin-dir (expand-file-name "R.exe" my/r-bin-dir)) nil nil "Customized with use-package ess")
  '(inhibit-startup-screen t)
  '(ispell-dictionary "en_US")
  '(line-move-visual t)
@@ -92,13 +93,7 @@
    '(:foreground default :background default :scale 1.5 :html-foreground
 		 "Black" :html-background "Transparent" :html-scale
 		 1.0 :matchers ("begin" "$1" "$" "$$" "\\(" "\\[")))
- '(package-selected-packages
-   '(adaptive-wrap auctex avy buffer-move consult consult-dir csv-mode
-		   darktooth-theme jemdoc-mode magit marginalia
-		   multiple-cursors orderless org-journal pdf-tools
-		   phi-search poly-R poly-markdown polymode
-		   smart-mode-line vertico vim-empty-lines-mode
-		   web-mode yasnippet))
+ '(package-selected-packages nil)
  '(preview-image-type 'pnm)
  '(preview-inner-environments
    '("Bmatrix" "Vmatrix" "aligned" "array" "bmatrix" "cases" "gathered"

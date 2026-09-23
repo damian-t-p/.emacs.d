@@ -129,6 +129,7 @@ markdown host mode instead of back to the enclosing R chunk"
     (add-to-list 'exec-path my/r-bin-dir)
     (setenv "PATH" (concat (getenv "PATH") path-separator my/r-bin-dir)))
   (when my/quarto-bin-dir
+    (add-to-list 'exec-path my/quarto-bin-dir)
     (setenv "PATH" (concat (getenv "PATH") path-separator my/quarto-bin-dir)))
   :hook ((inferior-ess-r-mode . (lambda()
 				   (local-unset-key (kbd "C-c SPC"))))
@@ -136,6 +137,15 @@ markdown host mode instead of back to the enclosing R chunk"
   :custom
   (inferior-R-program-name (and my/r-bin-dir (expand-file-name "R.exe" my/r-bin-dir)))
   (ess-style 'RStudio))
+
+(use-package pandoc-mode
+  :ensure t
+  :hook (markdown-mode . my/maybe-enable-pandoc-mode))
+
+(defun my/maybe-enable-pandoc-mode ()
+  "Enable `pandoc-mode' for standalone .md files only, not poly-markdown's .Rmd host buffers."
+  (when (and buffer-file-name (string-match-p "\\.md\\'" buffer-file-name))
+    (pandoc-mode 1)))
 
 (use-package polymode)
 
