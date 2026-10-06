@@ -226,8 +226,8 @@ markdown host mode instead of back to the enclosing R chunk"
 
 (use-package jemdoc-mode)
 
- (use-package markdown-mode
-   :hook visual-line-mode)
+(use-package markdown-mode
+  :hook (markdown-mode . visual-line-mode))
 
 (use-package multiple-cursors
   :bind (("C-S-c C-S-c" . mc/edit-lines)
